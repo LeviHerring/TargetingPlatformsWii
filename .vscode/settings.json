@@ -1,0 +1,23 @@
+{
+  "terminal.integrated.env.windows": {
+    "DEVKITPRO": "C:\\devkitPro",
+    "DEVKITPPC": "C:\\devkitPro\\devkitPPC",
+    "PATH": "C:\\devkitPro\\devkitPPC\\bin;C:\\devkitPro\\msys2\\usr\\bin;${env:PATH}"
+  },
+  "C_Cpp.default.compilerPath": "C:\\devkitPro\\devkitPPC\\bin\\powerpc-eabi-gcc.exe",
+  "C_Cpp.default.intelliSenseMode": "gcc-x64",
+  "C_Cpp.default.includePath": [
+    "C:\\devkitPro\\libogc\\include",  // This is where wpad.h is
+    "C:\\devkitPro\\portlibs\\ppc\\include",
+    "C:\\devkitPro\\devkitPPC\\include"
+  ],
+  "C_Cpp.default.defines": [
+    "__DEVKITPRO__",
+    "__WII__"
+  ],
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "files.associations": {
+    "processor.h": "c",
+    "wpad.h": "c"
+  }
+}

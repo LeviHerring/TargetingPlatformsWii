@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="2ce80e58-2594-44f0-94e5-40d680a580dd" name="DevkitPro Build" defaultType="TOOL">
+      <configuration id="7873f6af-50fc-42c3-abb2-59b943e0dd63" name="DevkitPro Build" toolchainName="Devkitpro">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_Make Build" />
+        </build>
+      </configuration>
+    </target>
+  </component>
+</project>
