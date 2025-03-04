@@ -20,10 +20,28 @@ float angle3 = 240.0F;  // Triangle 3 starts at the right
 
 bool aPressed = false; 
 
-s16	vertices[] ATTRIBUTE_ALIGN(32) = {
-	0, 15, 0,
-	-15, -15, 0,
-	15,	-15, 0};
+s16 vertices[] ATTRIBUTE_ALIGN(32) = {
+	-6 , -6 , 0 ,
+	3 , -6 , 0 ,
+	-6 , 3 , 0 ,
+	3 , 3 , 0 ,
+	-6 , -6 , 10 ,
+	3 , -6 , 10 ,
+	-6 , 3 , 10 ,
+	3 , 3 , 10 ,
+	1 , 3 , 4 ,
+	4 , 2 , 1 ,
+	5 , 6 , 8 ,
+	8 , 7 , 5 ,
+	1 , 2 , 6 ,
+	6 , 5 , 1 ,
+	2 , 4 , 8 ,
+	8 , 6 , 2 ,
+	4 , 3 , 7 ,
+	7 , 8 , 4 ,
+	3 , 1 , 5 ,
+	5 , 7 , 3 ,
+};
 
 	s16	secondVertices[] ATTRIBUTE_ALIGN(32) = {
 		0, 15, 0,
@@ -49,7 +67,7 @@ u8 pinkColors[] = {
 
 
 
-    void update_screen(Mtx viewMatrix, float x1, float y1, float x2, float y2, float x3, float y3);
+    void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, float x3, float y3 */);
 
 static void	copy_buffers(u32 unused);
 
@@ -110,28 +128,28 @@ int main(void) {
 
 	while (1)
 {
-    // Update the angles to make the triangles move
-    angle1 += 1.0F;
-    angle2 += 1.0F;
-    angle3 += 1.0F;
+    // // Update the angles to make the triangles move
+    // angle1 += 1.0F;
+    // angle2 += 1.0F;
+    // angle3 += 1.0F;
 
-    // Reset angles if they exceed 360° (for continuous circular movement)
-    if (angle1 >= 360.0F) angle1 = 0.0F;
-    if (angle2 >= 360.0F) angle2 = 0.0F;
-    if (angle3 >= 360.0F) angle3 = 0.0F;
+    // // Reset angles if they exceed 360° (for continuous circular movement)
+    // if (angle1 >= 360.0F) angle1 = 0.0F;
+    // if (angle2 >= 360.0F) angle2 = 0.0F;
+    // if (angle3 >= 360.0F) angle3 = 0.0F;
 
-    // Define radius here before using it
-    float radius = 50.0F; // Radius of the circular path
+    // // Define radius here before using it
+    // float radius = 50.0F; // Radius of the circular path
 
-    // Calculate the new positions based on angles
-    float x1 = cos(angle1 * M_PI / 180.0F) * radius;
-    float y1 = sin(angle1 * M_PI / 180.0F) * radius;
+    // // Calculate the new positions based on angles
+    // float x1 = cos(angle1 * M_PI / 180.0F) * radius;
+    // float y1 = sin(angle1 * M_PI / 180.0F) * radius;
 
-    float x2 = cos(angle2 * M_PI / 180.0F) * radius;
-    float y2 = sin(angle2 * M_PI / 180.0F) * radius;
+    // float x2 = cos(angle2 * M_PI / 180.0F) * radius;
+    // float y2 = sin(angle2 * M_PI / 180.0F) * radius;
 
-    float x3 = cos(angle3 * M_PI / 180.0F) * radius;
-    float y3 = sin(angle3 * M_PI / 180.0F) * radius;
+    // float x3 = cos(angle3 * M_PI / 180.0F) * radius;
+    // float y3 = sin(angle3 * M_PI / 180.0F) * radius;
 
     // Update the view matrix (camera transformation)
     guLookAt(view, &camera, &up, &look);
@@ -140,7 +158,7 @@ int main(void) {
     GX_InvalidateTexAll();
 
     // Now render the triangles with updated positions
-    update_screen(view, x1, y1, x2, y2, x3, y3);
+    update_screen(view/*, x1, y1, x2, y2, x3, y3 */);
 
     // Handle button presses
     WPAD_ScanPads();
@@ -160,12 +178,12 @@ int main(void) {
 	return 0;
 }
 
-void update_screen(Mtx viewMatrix, float x1, float y1, float x2, float y2, float x3, float y3) {
+void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, float x3, float y3 */) {
     Mtx modelView;
 
     // First Triangle (Rainbow)
     guMtxIdentity(modelView);
-    guMtxTransApply(modelView, modelView, x1, y1, -50.0F);  // Use x1, y1 for the first triangle
+    guMtxTransApply(modelView, modelView, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
     guMtxConcat(viewMatrix, modelView, modelView);
     GX_LoadPosMtxImm(modelView, GX_PNMTX0);
     GX_SetArray(GX_VA_CLR0, colors, 4 * sizeof(u8));
@@ -176,9 +194,37 @@ void update_screen(Mtx viewMatrix, float x1, float y1, float x2, float y2, float
     GX_Color1x8(1);     // Green color for vertex 1
     GX_Position1x8(2);  // Vertex 2
     GX_Color1x8(2);     // Blue color for vertex 2
+    GX_Position1x8(3);  // Vertex 0
+    GX_Color1x8(0);     // Red color for vertex 0
+    GX_Position1x8(4);  // Vertex 1
+    GX_Color1x8(1);     // Green color for vertex 1
+    GX_Position1x8(5);  // Vertex 2
+    GX_Color1x8(2); 
+    GX_Position1x8(6);  // Vertex 0
+    GX_Color1x8(0);     // Red color for vertex 0
+    GX_Position1x8(7);  // Vertex 1
+    GX_Color1x8(1);     // Green color for vertex 1
+    GX_Position1x8(8);  // Vertex 2
+    GX_Color1x8(2); 
+    GX_Position1x8(9);  // Vertex 0
+    GX_Color1x8(0);     // Red color for vertex 0
+    GX_Position1x8(10);  // Vertex 1
+    GX_Color1x8(1);     // Green color for vertex 1
+    GX_Position1x8(11);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_Position1x8(12);  // Vertex 0
+    GX_Color1x8(0);     // Red color for vertex 0
+    GX_Position1x8(13);  // Vertex 1
+    GX_Color1x8(1);     // Green color for vertex 1
+    GX_Position1x8(14);  // Vertex 2
+    GX_Color1x8(2); 
+    GX_Position1x8(15);  // Vertex 0
+    GX_Color1x8(0);     // Red color for vertex 0
+    GX_Position1x8(16);  // Vertex 1
+    GX_Color1x8(1);     // Green color for vertex 1
     GX_End();
 
-    if(aPressed == false)
+   /*  if(aPressed == false)
     {
          // Second Triangle (Blue)
     guMtxIdentity(modelView);
@@ -210,7 +256,7 @@ void update_screen(Mtx viewMatrix, float x1, float y1, float x2, float y2, float
     GX_Color1x8(1);     // Pink color for vertex 1
     GX_Position1x8(2);  // Vertex 2
     GX_Color1x8(2);     // Pink color for vertex 2
-    GX_End();
+    GX_End(); */
 
     GX_DrawDone();  // Ensure all triangles are drawn before swapping buffers
     GX_CopyDisp(frameBuffer, GX_TRUE);
