@@ -29,18 +29,22 @@ s16 vertices[] ATTRIBUTE_ALIGN(32) = {
 	3 , -6 , 10 ,
 	-6 , 3 , 10 ,
 	3 , 3 , 10 ,
-	1 , 3 , 4 ,
-	4 , 2 , 1 ,
-	5 , 6 , 8 ,
-	8 , 7 , 5 ,
-	1 , 2 , 6 ,
-	6 , 5 , 1 ,
-	2 , 4 , 8 ,
-	8 , 6 , 2 ,
-	4 , 3 , 7 ,
-	7 , 8 , 4 ,
-	3 , 1 , 5 ,
-	5 , 7 , 3 ,
+	
+};
+
+s16 faceList[] ATTRIBUTE_ALIGN(32) = {
+    0 , 2 , 3 ,
+	3 , 1 , 0 ,
+	4 , 5 , 7 ,
+	7 , 6 , 4 ,
+	0 , 1 , 5 ,
+	5 , 4 , 0 ,
+	1 , 3 , 7 ,
+	7 , 5 , 1 ,
+	3 , 2 , 6 ,
+	6 , 7 , 3 ,
+	2 , 0 , 4 ,
+	4 , 6 , 2 ,
 };
 
 	s16	secondVertices[] ATTRIBUTE_ALIGN(32) = {
@@ -65,7 +69,8 @@ u8 pinkColors[] = {
     255, 105, 180, 255   // Pink
 };
 
-
+    static float angle = 0.0F;
+    static float angleY = 0.0f;
 
     void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, float x3, float y3 */);
 
@@ -120,6 +125,7 @@ int main(void) {
     GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
     GX_SetArray(GX_VA_POS, vertices, 3 * sizeof(s16));
     GX_SetArray(GX_VA_CLR0, colors, 4 * sizeof(u8));
+    GX_SetArray(GX_VA_PTNMTXIDX, faceList, sizeof(s16)); 
     GX_SetNumChans(1);
     GX_SetNumTexGens(0);
     GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0);
@@ -172,6 +178,9 @@ int main(void) {
             aPressed = false;  // Reset when the button is not pressed
         }
     } 
+
+    angle += 1.0F; // Increment rotation
+    angleY += 1.0f; 
     
 }
 
@@ -179,50 +188,201 @@ int main(void) {
 }
 
 void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, float x3, float y3 */) {
-    Mtx modelView;
+    Mtx modelView, rotation;
+    guVector axisY = {0, 1, 0}; // Y-axis rotation;
 
     // First Triangle (Rainbow)
-    guMtxIdentity(modelView);
-    guMtxTransApply(modelView, modelView, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
-    guMtxConcat(viewMatrix, modelView, modelView);
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
     GX_LoadPosMtxImm(modelView, GX_PNMTX0);
-    GX_SetArray(GX_VA_CLR0, colors, 4 * sizeof(u8));
+    GX_SetArray(GX_VA_CLR0,  blueColors, 4 * sizeof(u8));
     GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
     GX_Position1x8(0);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
+     GX_Color1x8(0);     // Red color for vertex 0
+     GX_Position1x8(2);  // Vertex 1
+     GX_Color1x8(1);     // Green color for vertex 1
+     GX_Position1x8(3);  // Vertex 2
+     GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+    
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(3);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
     GX_Position1x8(1);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(0);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(4);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(5);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(7);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(7);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(6);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(4);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(0);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(1);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(5);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(5);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(4);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(0);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(1);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(3);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(7);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End();
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(7);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(5);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(1);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End(); 
+    
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(3);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(2);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(6);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End(); 
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(6);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(7);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(3);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End(); 
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(2);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(0);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
+    GX_Position1x8(4);  // Vertex 2
+    GX_Color1x8(2);     // Blue color for vertex 2
+    GX_End(); 
+
+    guMtxIdentity(viewMatrix);
+    guMtxTransApply(viewMatrix, viewMatrix, 0.0F,	0.0F, /*x1, y1,*/ -50.0F);  // Use x1, y1 for the first triangle
+    guMtxIdentity(rotation);
+    guMtxRotAxisDeg(rotation, &axisY, angle); // Apply rotation
+    guMtxConcat(viewMatrix, rotation, modelView);
+    GX_LoadPosMtxImm(modelView, GX_PNMTX0);
+    GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));  // Set blue color for the second triangle
+    GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
+    GX_Position1x8(4);  // Vertex 0
+    GX_Color1x8(0);     // Blue color for vertex 0
+    GX_Position1x8(6);  // Vertex 1
+    GX_Color1x8(1);     // Blue color for vertex 1
     GX_Position1x8(2);  // Vertex 2
     GX_Color1x8(2);     // Blue color for vertex 2
-    GX_Position1x8(3);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
-    GX_Position1x8(4);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
-    GX_Position1x8(5);  // Vertex 2
-    GX_Color1x8(2); 
-    GX_Position1x8(6);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
-    GX_Position1x8(7);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
-    GX_Position1x8(8);  // Vertex 2
-    GX_Color1x8(2); 
-    GX_Position1x8(9);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
-    GX_Position1x8(10);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
-    GX_Position1x8(11);  // Vertex 2
-    GX_Color1x8(2);     // Blue color for vertex 2
-    GX_Position1x8(12);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
-    GX_Position1x8(13);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
-    GX_Position1x8(14);  // Vertex 2
-    GX_Color1x8(2); 
-    GX_Position1x8(15);  // Vertex 0
-    GX_Color1x8(0);     // Red color for vertex 0
-    GX_Position1x8(16);  // Vertex 1
-    GX_Color1x8(1);     // Green color for vertex 1
-    GX_End();
+    GX_End(); 
 
    /*  if(aPressed == false)
     {
