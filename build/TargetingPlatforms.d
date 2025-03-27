@@ -57,7 +57,8 @@ TargetingPlatforms.o: \
  C:\devkitPro/libogc/include/wiiuse/wpad.h \
  C:\devkitPro/libogc/include/wiiuse/wiiuse.h \
  C:\devkitPro/libogc/include/bte/bte.h \
- C:\devkitPro/libogc/include/bte/bd_addr.h
+ C:\devkitPro/libogc/include/bte/bd_addr.h \
+ C:\devkitPro/libogc/include/testmesh.h
 C:\devkitPro/libogc/include/gccore.h:
 C:\devkitPro/libogc/include/ogc/dsp.h:
 C:\devkitPro/libogc/include/gctypes.h:
@@ -116,3 +117,4 @@ C:\devkitPro/libogc/include/wiiuse/wpad.h:
 C:\devkitPro/libogc/include/wiiuse/wiiuse.h:
 C:\devkitPro/libogc/include/bte/bte.h:
 C:\devkitPro/libogc/include/bte/bd_addr.h:
+C:\devkitPro/libogc/include/testmesh.h:
