@@ -146,13 +146,12 @@ int main(void) {
     GX_LoadProjectionMtx(projection, GX_PERSPECTIVE);
 
     GX_ClearVtxDesc();
-    GX_SetVtxDesc(GX_VA_POS, GX_INDEX8);
+    GX_SetVtxDesc(GX_VA_POS, GX_INDEX16); //was index8
     GX_SetVtxDesc(GX_VA_CLR0, GX_INDEX8);
     GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
     GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
     GX_SetArray(GX_VA_POS, vertices, 3 * sizeof(s16));
     GX_SetArray(GX_VA_CLR0, colors, 4 * sizeof(u8));
-    GX_SetArray(GX_VA_PTNMTXIDX, faceList, sizeof(s16)); 
     GX_SetNumChans(1);
     GX_SetNumTexGens(0);
     GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0);
@@ -281,14 +280,14 @@ guMtxRotAxisDeg(rotation, &axisY, angle);  // Rotate around Y-axis
 guMtxConcat(viewMatrix, rotation, modelView);
 guMtxRotAxisDeg(rotation, &axisX, angleY); // Rotate around X-axis
 guMtxConcat(modelView, rotation, modelView);
-guMtxTransApply(modelView, modelView, 20.0F, 0.0F, -50.0F); // Move right
+guMtxTransApply(modelView, modelView, 0.0F, 0.0F, -30.0F); // Move right
 
 GX_LoadPosMtxImm(modelView, GX_PNMTX0);
 
 // Draw the mesh
 GX_Begin(GX_TRIANGLES, GX_VTXFMT0, numFaces * 3);
 for (int i = 0; i < numFaces * 3; i++) { 
-	GX_Position1x8(teaFaceList[i]);
+	GX_Position1x16(teaFaceList[i]);
 	GX_Color1x8(teaFaceList[i] % 3);
 }
 GX_End();
