@@ -21,6 +21,7 @@ float angle3 = 240.0F;  // Triangle 3 starts at the right
 
 bool aPressed = false; 
 
+//Vertex list for object 
 static const float vertices[] = {
 	-2.0 , -2.0 , 0.0 ,
 	2.0 , -2.0 , 0.0 ,
@@ -32,6 +33,7 @@ static const float vertices[] = {
 	2.0 , 2.0 , 4.0 ,
 };
 
+//face list for object 
 static const short faceList[] = {
 	0 , 2 , 3 ,
 	3 , 1 , 0 ,
@@ -48,6 +50,7 @@ static const short faceList[] = {
 };
 
 
+//vertex list for pyramid with float showing decimal precision 
 static const float pyramidVertices[] = {
 	0.0875181 , 0.175275 , 5.0 ,
 	-2.41248 , -2.32473 , 0.0 ,
@@ -57,6 +60,7 @@ static const float pyramidVertices[] = {
 	0.0875181 , 0.175275 , 0.0 ,
 };
 
+//pyramid face list staying as short as there is no precision
 static const short pyramidFaceList[] = {
 	0 , 1 , 2 ,
 	0 , 2 , 3 ,
@@ -77,6 +81,7 @@ static const short pyramidFaceList[] = {
 		-30, -15, 0,
 		30,	-15, 0};
 
+        //colours, can be used to create a rainbow 
 u8 colors[]	ATTRIBUTE_ALIGN(32)	= {
 	255, 0,	0, 255,		// red
 	0, 255,	0, 255,		// green
@@ -218,7 +223,7 @@ void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, fl
     guVector axisY = {0, 1, 0};  // Y-axis rotation
     guVector axisX = {1, 0, 0};  // X-axis rotation
 
-
+    //if up down left or right are pressed the object can move in a direction 
     if (WPAD_ButtonsDown(0) & WPAD_BUTTON_UP) {
         blueSquareY += 1.0F;  // Move up
     }
@@ -245,7 +250,9 @@ void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, fl
     // GX_LoadPosMtxImm(modelView, GX_PNMTX0);
 
     // // Set color array (optional, can be per-vertex)
-     GX_SetArray(GX_VA_CLR0, blueColors, 4 * sizeof(u8));
+     GX_SetArray(GX_VA_CLR0, pinkColors, 4 * sizeof(u8));
+
+
     // GX_SetArray(GX_VA_POS, vertices, 3 * sizeof(s16));
     // // Begin rendering cube using faceList
     // if(aPressed != true)
@@ -273,7 +280,8 @@ void update_screen(Mtx viewMatrix/* , float x1, float y1, float x2, float y2, fl
     //     GX_Color1x8(faceList[i] % 3);
     // }
     // GX_End();
-   
+    
+   //set array for the object being drawn 
 	GX_SetArray(GX_VA_POS, Teavertices, 3 * sizeof(float));
     guMtxIdentity(modelView);
 guMtxRotAxisDeg(rotation, &axisY, angle);  // Rotate around Y-axis
