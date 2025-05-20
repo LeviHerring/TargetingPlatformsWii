@@ -6,7 +6,7 @@ This project demonstrates the process of importing and rendering custom 3D model
 
 ## Project Summary
 
-- Uses the GX graphics library (DevkitPro/libogc) to manually render 3D objects
+- Uses the GX graphics library (DevkitPro/libogc) to manually render 3D objects on the Wii
 - Includes a MaxScript exporter to convert 3D models to a format readable by the Wii
 - Renders multiple rotating triangles and imported models
 - Designed to run in the Dolphin emulator or on real hardware via `.dol` executable
@@ -110,11 +110,7 @@ Open the `documentation/html/index.html` in the documentation zipped folder in a
 
 Levi Herring – [GitHub](https://github.com/LeviHerring)
 
----
 
-## License
-
-This project is open-source under the MIT License.
 
  
 
